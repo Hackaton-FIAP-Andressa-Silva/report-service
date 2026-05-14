@@ -1,0 +1,50 @@
+# Standalone development environment for report-service
+#
+# Starts: MongoDB + report-service
+#
+# Usage:
+#   docker compose up --build          # start all
+#   docker compose down -v             # stop and remove volumes
+#
+# Service available at: http://localhost:8003/docs
+
+networks:
+  default:
+    name: report-dev
+
+services:
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  report-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8003"
+    environment:
+      APP_NAME: report-service
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_DATABASE: report_db
+      INTERNAL_SERVICE_TOKEN: dev-internal-token
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:
