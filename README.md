@@ -42,7 +42,7 @@ pytest tests/ -v --cov=src
   "components": [{"name": "API Gateway", "type": "Gateway", ...}],
   "risks": [{"title": "...", "severity": "HIGH", ...}],
   "recommendations": [{"title": "...", "priority": "HIGH", ...}],
-  "ai_model": "gpt-4o",
+  "ai_model": "gemini-2.0-flash",
   "processing_time_seconds": 14.2,
   "created_at": "2026-05-08T10:30:45"
 }
