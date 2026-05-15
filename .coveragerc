@@ -1,0 +1,9 @@
+[run]
+source = src
+omit =
+    src/api/main.py
+    src/infrastructure/database/*
+    src/infrastructure/logging_config.py
+
+[report]
+fail_under = 80
